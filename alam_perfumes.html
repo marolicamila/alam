@@ -518,18 +518,33 @@ function showSyncStatus(msg, color){
 }
 
 // ── GAS HELPERS ──
-async function gasRead(sheet){
-  const url = GAS_URL+'?action=read&sheet='+encodeURIComponent(sheet);
-  const r = await fetch(url);
-  if(!r.ok) throw new Error('GAS read error '+r.status);
-  return await r.json();
+function gasRead(sheet){
+  return new Promise((resolve, reject)=>{
+    const cbName = '_gasCallback_'+Date.now();
+    const url = GAS_URL+'?action=read&sheet='+encodeURIComponent(sheet)+'&callback='+cbName;
+    window[cbName] = function(data){
+      delete window[cbName];
+      document.getElementById('gas-script-tag') && document.getElementById('gas-script-tag').remove();
+      resolve(data);
+    };
+    const s = document.createElement('script');
+    s.id = 'gas-script-tag';
+    s.onerror = ()=>{ delete window[cbName]; reject(new Error('JSONP error')); };
+    s.src = url;
+    document.head.appendChild(s);
+    setTimeout(()=>{ delete window[cbName]; reject(new Error('JSONP timeout')); }, 10000);
+  });
 }
 
 async function gasWrite(sheet, rows){
+  // Use no-cors mode — fire and forget, then verify with read
   const url = GAS_URL+'?action=write&sheet='+encodeURIComponent(sheet)+'&data='+encodeURIComponent(JSON.stringify(rows));
-  const r = await fetch(url);
-  if(!r.ok) throw new Error('GAS write error '+r.status);
-  return await r.json();
+  try{
+    await fetch(url, {mode:'no-cors'});
+  } catch(e){
+    // no-cors fetch throws on network error only
+    throw e;
+  }
 }
 
 // ── SAVE / LOAD ──
