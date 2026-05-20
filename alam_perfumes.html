@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ALAM Importados</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#c9a84c;--gold-light:#1e2d1e;--gold-mid:#a07830;--gold-bright:#e8c96a;--gold-pale:#f5edd6;
+  --navy:#0d1b2a;--navy2:#112236;--navy3:#162d44;--navy4:#1e3a52;
+  --text:#f0e8d8;--text2:#b8a888;--text3:#6e7e8e;
+  --border:#1e3a52;--border2:#2a4a62;--border-gold:#3a2e18;
+  --red:#e05555;--red-bg:rgba(224,85,85,0.12);
+  --green:#4caf7d;--green-bg:rgba(76,175,125,0.12);
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:'Jost',sans-serif;background:var(--navy);color:var(--text);font-size:14px;min-height:100vh;}
+.app{max-width:430px;margin:0 auto;padding-bottom:76px;}
+
+/* HEADER MARCA */
+.brand-header{text-align:center;padding:20px 14px 4px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.brand-header .brand-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase;}
+.brand-header .brand-sub{font-size:9px;letter-spacing:4px;color:var(--text3);text-transform:uppercase;margin-top:2px;}
+.brand-divider{display:flex;align-items:center;gap:8px;padding:0 20px;margin:8px 0;}
+.brand-divider::before,.brand-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-mid),transparent);}
+.brand-divider span{color:var(--gold);font-size:10px;}
+
+/* NAV */
+.nav{display:flex;justify-content:space-around;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100vw);background:var(--navy2);border-top:1px solid var(--border2);padding:6px 0 max(10px,env(safe-area-inset-bottom));z-index:300;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text3);font-size:10px;min-width:54px;transition:color .15s;letter-spacing:.5px;}
+.nb.on{color:var(--gold);}
+.nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+
+/* PAGES */
+.pg{display:none;padding:14px;}
+.pg.on{display:block;}
+.ttl{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--gold);margin-bottom:14px;letter-spacing:.5px;}
+.sub{font-size:11px;font-weight:500;color:var(--text3);margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;}
+
+/* INPUTS */
+input[type=text],input[type=number],select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--navy3);color:var(--text);outline:none;transition:border-color .2s;font-family:'Jost',sans-serif;}
+input::placeholder{color:var(--text3);}
+input:focus,select:focus{border-color:var(--gold-mid);}
+.field{margin-bottom:10px;}
+.field label{display:block;font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;}
+
+/* CHIPS */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{padding:5px 12px;border:1px solid var(--border2);border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap;background:var(--navy3);color:var(--text2);flex-shrink:0;transition:all .15s;}
+.chip.on{background:var(--gold-mid);border-color:var(--gold-mid);color:var(--navy);}
+
+/* BUTTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;margin-top:8px;transition:opacity .15s;letter-spacing:.8px;text-transform:uppercase;font-family:'Jost',sans-serif;}
+.btn:active{opacity:.8;}
+.btn-g{background:linear-gradient(135deg,var(--gold-mid),var(--gold));color:var(--navy);font-weight:600;}
+.btn-o{background:none;border:1px solid var(--border2);color:var(--text2);}
+.btn-r{background:var(--red);color:#fff;}
+
+/* CARDS */
+.card{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--radius);padding:12px;margin-bottom:8px;}
+.card2{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;}
+.b-ok{background:var(--green-bg);color:var(--green);}
+.b-lo{background:var(--red-bg);color:var(--red);}
+.b-na{background:var(--navy4);color:var(--text3);}
+.b-gold{background:rgba(201,168,76,.15);color:var(--gold);}
+
+/* STOCK TABLE */
+.disc-bar{display:flex;align-items:center;gap:8px;background:var(--navy3);padding:8px 12px;border-radius:var(--radius-sm);margin-bottom:10px;flex-wrap:wrap;border:1px solid var(--border);}
+.disc-bar span{font-size:11px;color:var(--text2);}
+.disc-bar strong{color:var(--gold);}
+.disc-bar input[type=range]{flex:1;min-width:80px;accent-color:var(--gold);}
+.stbl{width:100%;border-collapse:collapse;font-size:11px;}
+.stbl th{color:var(--text3);text-align:left;padding:5px 4px;border-bottom:1px solid var(--border2);font-weight:500;font-size:10px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase;}
+.stbl td{padding:7px 4px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+.stbl tr.alerta td{background:var(--red-bg);}
+.mbar{display:inline-block;width:36px;height:5px;border-radius:3px;background:var(--navy4);vertical-align:middle;overflow:hidden;}
+.mfill{height:100%;border-radius:3px;}
+
+/* WIZARD */
+.step-bar{display:flex;align-items:center;gap:4px;margin-bottom:20px;}
+.sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--border2);color:var(--text3);flex-shrink:0;}
+.sdot.cur{border-color:var(--gold);color:var(--gold);}
+.sdot.done{background:var(--gold-mid);border-color:var(--gold-mid);color:var(--navy);}
+.sline{flex:1;height:1px;background:var(--border2);}
+.ws{display:none;}
+.ws.on{display:block;}
+.res-box{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--radius-sm);max-height:230px;overflow-y:auto;margin-top:4px;}
+.res-item{padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border);}
+.res-item:last-child{border:none;}
+.res-item:active{background:var(--navy4);}
+.res-name{font-weight:500;font-size:13px;color:var(--text);}
+.res-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.qty-row{display:flex;align-items:center;justify-content:center;gap:28px;margin:28px 0;}
+.qbtn{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--border2);background:var(--navy3);font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);transition:border-color .15s;}
+.qbtn:active{border-color:var(--gold);}
+.qnum{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:400;min-width:60px;text-align:center;color:var(--gold);}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+.pbtn{padding:18px 8px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--navy3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;color:var(--text2);transition:all .15s;letter-spacing:.5px;}
+.pbtn svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.pbtn.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08);}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:var(--navy3);border:1px solid var(--border);padding:12px;border-radius:var(--radius-sm);margin:10px 0;}
+.tog{width:44px;height:24px;border-radius:12px;background:var(--navy4);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:1px solid var(--border2);}
+.tog.on{background:var(--gold-mid);border-color:var(--gold-mid);}
+.tog::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:var(--text);top:2px;left:2px;transition:transform .2s;}
+.tog.on::after{transform:translateX(20px);background:var(--navy);}
+.sum-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--text2);}
+.sum-row.ttl-row{font-weight:600;font-size:16px;border-top:1px solid var(--border2);margin-top:8px;padding-top:10px;color:var(--text);}
+.ok-screen{text-align:center;padding:50px 20px;}
+.ok-icon{font-size:56px;margin-bottom:16px;color:var(--gold);}
+.ok-ttl{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:8px;color:var(--gold);}
+.ok-sub{font-size:14px;color:var(--text2);}
+
+/* HISTORIAL */
+.met-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.met{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;}
+.met-lbl{font-size:9px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.met-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text);}
+.met-val.gold{color:var(--gold);}
+.sale-card{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px;}
+.sale-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.sale-prod{font-weight:500;font-size:13px;flex:1;margin-right:8px;color:var(--text);}
+.sale-price{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--gold);}
+.sale-meta{font-size:11px;color:var(--text3);margin-top:3px;}
+.top5-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.top5-item:last-child{border:none;}
+.t5-rank{font-size:11px;color:var(--text3);width:16px;}
+.t5-name{flex:1;font-size:12px;color:var(--text2);}
+.t5-val{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--gold);}
+.no-data{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px;}
+
+/* CATALOGO */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cat-card{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;cursor:pointer;transition:border-color .2s;}
+.cat-card:active{border-color:var(--gold);}
+.cat-brand{font-size:9px;color:var(--gold-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.cat-name{font-size:12px;font-weight:400;color:var(--text);line-height:1.4;margin-bottom:8px;}
+.cat-price{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--gold);}
+.cat-stock{font-size:10px;color:var(--text3);margin-top:3px;}
+
+/* COMPRA */
+.nota-item{display:grid;grid-template-columns:1fr 52px 60px auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.nota-hdr{display:grid;grid-template-columns:1fr 52px 60px auto;gap:6px;padding:4px 0;border-bottom:1px solid var(--border2);}
+.nota-hdr span{font-size:9px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.nota-item input{padding:6px 8px;font-size:12px;}
+.nota-item .match-name{font-size:11px;font-weight:500;line-height:1.3;color:var(--text2);}
+.nota-item .match-badge{font-size:9px;padding:1px 5px;border-radius:8px;margin-top:2px;display:inline-block;}
+.m-hi{background:var(--green-bg);color:var(--green);}
+.m-md{background:rgba(201,168,76,.12);color:var(--gold);}
+.m-no{background:var(--navy4);color:var(--text3);}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;font-size:16px;}
+.nota-sum{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:12px;}
+.nota-sum-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);}
+.nota-sum-row.tot{font-weight:600;font-size:15px;border-top:1px solid var(--border2);margin-top:6px;padding-top:8px;color:var(--text);}
+.info-box{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--gold-bright);margin-bottom:12px;}
+</style>
+
+<div class="app">
+
+<header class="brand-header">
+  <div class="brand-name">ALAM</div>
+  <div class="brand-sub">Importados</div>
+  <div id="sync-status" style="font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.5px;transition:opacity 1s;"></div>
+</header>
+<div class="brand-divider"><span>◆</span></div>
+
+<!-- NAVBAR -->
+<nav class="nav" role="navigation" aria-label="Navegación principal">
+  <button class="nb on" onclick="nav('stock')" id="nb-stock" aria-label="Stock">
+    <svg viewBox="0 0 24 24"><path d="M20 7H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+    Stock
+  </button>
+  <button class="nb" onclick="nav('venta')" id="nb-venta" aria-label="Venta">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    Venta
+  </button>
+  <button class="nb" onclick="nav('hist')" id="nb-hist" aria-label="Historial">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Historial
+  </button>
+  <button class="nb" onclick="nav('cat')" id="nb-cat" aria-label="Catálogo">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Catálogo
+  </button>
+  <button class="nb" onclick="nav('compra')" id="nb-compra" aria-label="Compra">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+    Compra
+  </button>
+</nav>
+
+<!-- ═══════════════ STOCK ═══════════════ -->
+<div id="pg-stock" class="pg on">
+  <div class="ttl">Stock</div>
+  <input type="text" id="s-search" placeholder="Buscar producto..." oninput="renderStock()" style="margin-bottom:10px;">
+  <div class="chips" id="s-brands"></div>
+  <div class="disc-bar">
+    <span>Efectivo: <strong>15%</strong></span>
+    <span style="margin-left:8px;">Desc. extra:</span>
+    <input type="range" min="0" max="60" step="5" value="0" id="s-disc" oninput="renderStock()">
+    <strong id="s-disc-v" style="color:var(--gold);font-size:12px;min-width:28px;">0%</strong>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="stbl">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cant</th>
+          <th>Precio</th>
+          <th>Costo</th>
+          <th>Margen</th>
+          <th>c/15%</th>
+          <th id="s-disc-hdr">c/0%</th>
+        </tr>
+      </thead>
+      <tbody id="s-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ VENTA ═══════════════ -->
+<div id="pg-venta" class="pg">
+  <div class="ttl">Registrar venta</div>
+  <div class="step-bar">
+    <div class="sdot cur" id="sd1">1</div><div class="sline"></div>
+    <div class="sdot" id="sd2">2</div><div class="sline"></div>
+    <div class="sdot" id="sd3">3</div><div class="sline"></div>
+    <div class="sdot" id="sd4">4</div>
+  </div>
+
+  <!-- Step 1: Producto -->
+  <div class="ws on" id="ws1">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">Buscá el perfume</p>
+    <input type="text" id="v-search" placeholder="Nombre del perfume..." oninput="ventaSearch(this.value)">
+    <div class="res-box" id="v-results" style="display:none;"></div>
+    <div id="v-sel" style="display:none;"></div>
+  </div>
+
+  <!-- Step 2: Cantidad + descuento -->
+  <div class="ws" id="ws2">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:2px;" id="ws2-name"></p>
+    <div class="qty-row">
+      <button class="qbtn" onclick="chgQty(-1)">−</button>
+      <span class="qnum" id="v-qty">1</span>
+      <button class="qbtn" onclick="chgQty(1)">+</button>
+    </div>
+    <div class="toggle-row" id="cash-wrap" style="display:none;">
+      <div>
+        <p style="font-size:13px;font-weight:500;">Descuento efectivo 15%</p>
+        <p style="font-size:11px;color:var(--text2);">¿Paga en efectivo?</p>
+      </div>
+      <div class="tog" id="v-cash-tog" onclick="togCash()"></div>
+    </div>
+    <div id="v-price-prev" class="card2" style="margin-top:8px;"></div>
+    <button class="btn btn-g" onclick="goStep(3)">Continuar</button>
+    <button class="btn btn-o" onclick="goStep(1)">Atrás</button>
+  </div>
+
+  <!-- Step 3: Pago + cliente -->
+  <div class="ws" id="ws3">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">Método de pago</p>
+    <div class="pay-grid">
+      <button class="pbtn" onclick="selPay('efectivo')" id="pay-efectivo">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Efectivo
+      </button>
+      <button class="pbtn" onclick="selPay('transferencia')" id="pay-transferencia">
+        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Transfer.
+      </button>
+      <button class="pbtn" onclick="selPay('debito')" id="pay-debito">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Débito
+      </button>
+      <button class="pbtn" onclick="selPay('credito')" id="pay-credito">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="16" cy="15" r="2"/><circle cx="20" cy="15" r="2"/></svg>
+        Crédito
+      </button>
+    </div>
+    <div id="cash-disc-auto" style="display:none;">
+      <div class="toggle-row">
+        <div>
+          <p style="font-size:13px;font-weight:500;">Aplicar 15% OFF efectivo</p>
+          <p style="font-size:11px;color:var(--text2);">Descuento automático</p>
+        </div>
+        <div class="tog on" id="v-cash-tog2" onclick="togCash2()"></div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:8px;">
+      <label>Nombre del cliente (opcional)</label>
+      <input type="text" id="v-client" placeholder="ej: María García">
+    </div>
+    <button class="btn btn-g" onclick="goStep(4)">Ver resumen</button>
+    <button class="btn btn-o" onclick="goStep(2)">Atrás</button>
+  </div>
+
+  <!-- Step 4: Resumen -->
+  <div class="ws" id="ws4">
+    <div class="card" id="v-summary"></div>
+    <button class="btn btn-g" onclick="confirmSale()">✓ Confirmar venta</button>
+    <button class="btn btn-o" onclick="goStep(3)">Atrás</button>
+  </div>
+
+  <!-- Step 5: OK -->
+  <div class="ws" id="ws5">
+    <div class="ok-screen">
+      <div class="ok-icon" style="font-family:Cormorant Garamond,serif;font-size:64px;color:var(--gold);">✦</div>
+      <p class="ok-ttl">¡Venta registrada!</p>
+      <p class="ok-sub" id="ok-detail"></p>
+      <button class="btn btn-g" onclick="newSale()" style="max-width:240px;margin:28px auto 0;">Nueva venta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HISTORIAL ═══════════════ -->
+<div id="pg-hist" class="pg">
+  <div class="ttl">Historial</div>
+  <div class="met-grid" id="h-metrics"></div>
+  <div class="chips" id="h-chips">
+    <span class="chip on" onclick="filtHist('all',this)">Todo</span>
+    <span class="chip" onclick="filtHist('efectivo',this)">Efectivo</span>
+    <span class="chip" onclick="filtHist('transferencia',this)">Transfer.</span>
+    <span class="chip" onclick="filtHist('debito',this)">Débito</span>
+    <span class="chip" onclick="filtHist('credito',this)">Crédito</span>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <input type="text" id="h-client-f" placeholder="Filtrar cliente..." oninput="renderHist()" style="flex:1;">
+  </div>
+  <div id="h-list"></div>
+  <div class="sub">Top 5 productos</div>
+  <div id="h-top5"></div>
+</div>
+
+<!-- ═══════════════ CATÁLOGO ═══════════════ -->
+<div id="pg-cat" class="pg">
+  <div class="ttl">Catálogo</div>
+  <input type="text" id="c-search" placeholder="Buscar perfume..." oninput="renderCat()" style="margin-bottom:10px;">
+  <div class="chips" id="c-brands"></div>
+  <div class="cat-grid" id="c-grid"></div>
+</div>
+
+<!-- ═══════════════ COMPRA ═══════════════ -->
+<div id="pg-compra" class="pg">
+  <div class="ttl">Cargar nota de compra</div>
+  <div class="info-box">💡 Costo unitario = (USD × cotización × 1,17) + (envío ÷ unidades totales). Al aplicar reemplaza el costo en el catálogo.</div>
+
+  <!-- Drop zona imagen -->
+  <div id="drop-zone" style="border:2px dashed var(--border2);border-radius:var(--radius);padding:24px 16px;text-align:center;cursor:pointer;margin-bottom:14px;transition:border-color .2s;" onclick="document.getElementById('img-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='var(--border2)'" ondrop="handleDrop(event)">
+    <input type="file" id="img-input" accept="image/*" style="display:none;" onchange="handleFile(this.files[0])">
+    <div id="drop-content">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 8px;display:block;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p style="font-size:13px;font-weight:500;color:var(--text2);">Tocá o arrastrá la foto de la nota</p>
+      <p style="font-size:11px;color:var(--text3);margin-top:4px;">Claude lee los productos, cantidades y precios USD automáticamente</p>
+    </div>
+    <div id="drop-preview" style="display:none;">
+      <img id="drop-img" style="max-width:100%;max-height:160px;border-radius:6px;margin-bottom:8px;">
+      <p id="drop-status" style="font-size:12px;color:var(--text2);"></p>
+    </div>
+  </div>
+
+  <!-- Campos USD + envío -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+    <div class="field">
+      <label>USD del día (ARS)</label>
+      <input type="number" id="n-usd" placeholder="ej: 1250" oninput="recalcNota()">
+    </div>
+    <div class="field">
+      <label>Envío total (ARS)</label>
+      <input type="number" id="n-env" placeholder="ej: 50000" oninput="recalcNota()">
+    </div>
+  </div>
+
+  <div class="sub" style="display:flex;align-items:center;justify-content:space-between;">
+    Productos de la nota
+    <button onclick="addNotaItem()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--gold);font-weight:500;">+ Agregar manual</button>
+  </div>
+  <div class="nota-hdr">
+    <span>Producto nota → match catálogo</span><span>Cant</span><span>USD unit</span><span></span>
+  </div>
+  <div id="n-items"></div>
+  <div id="n-summary" style="display:none;"></div>
+  <button class="btn btn-g" id="n-apply-btn" onclick="applyNota()" style="display:none;">Aplicar al catálogo</button>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const CATALOG = [
+  {marca:"FRENCH AVENUE",nombre:"AETHER EXTRAIT 100ML",cantidad:0,precio:99999,costo:60882},
+  {marca:"LATTAFA",nombre:"FAKHAR PLATIN EDP 100 ML",cantidad:2,precio:60000,costo:28669},
+  {marca:"FRENCH AVENUE",nombre:"LIQUID BRUN EDP 100 ML",cantidad:1,precio:99900,costo:58353},
+  {marca:"FRENCH AVENUE",nombre:"VULCAN FEU EDP 100 ML",cantidad:0,precio:94999,costo:64882},
+  {marca:"AFNAN",nombre:"9PM EDP 100 ML",cantidad:1,precio:72000,costo:38132},
+  {marca:"AFNAN",nombre:"TURATHI ELECTRIC EDP 90 ML",cantidad:0,precio:85000,costo:51280},
+  {marca:"AL HARAMAIN",nombre:"AMBER AOUD GOLD EDITION EDP 60 ML",cantidad:0,precio:85000,costo:60503},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD AQUA DUBAI 100 ML",cantidad:1,precio:109900,costo:80296},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD BLACK EDITION 150 ML + PERFUMERO",cantidad:2,precio:129000,costo:105183},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD CARBON 100 ML",cantidad:1,precio:115000,costo:80296},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD DUBAI NIGHT 100 ML",cantidad:1,precio:109900,costo:60503},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD GOLD 120 ML",cantidad:1,precio:120000,costo:65329},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD GOLD 999.9 DUBAI EDITION 100 ML + PERFUMERO",cantidad:1,precio:115000,costo:71721},
+  {marca:"AL HARAMAIN",nombre:"AMBER OUD RUBY 120 ML",cantidad:0,precio:130000,costo:80296},
+  {marca:"AL WATANIAH",nombre:"AMEERATI EDP 100ML",cantidad:4,precio:49999,costo:18637},
+  {marca:"AL WATANIAH",nombre:"DURRAT AL AROOS EDP 85ML",cantidad:1,precio:59000,costo:20445},
+  {marca:"AL WATANIAH",nombre:"SHAGAF AL WARD EDP 100ML",cantidad:3,precio:49999,costo:22937},
+  {marca:"AL WATANIAH",nombre:"WATANI PURPLE EDP 100 ML",cantidad:2,precio:49999,costo:20173},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT - WOMAN 105ML",cantidad:0,precio:70000,costo:44026},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT INTENSE MAN EDT 105 ML",cantidad:2,precio:79900,costo:43843},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT MALEKA EDP 100ML",cantidad:0,precio:92000,costo:44026},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT PRECIEUX EXTRACTO DE PERFUME 55 ML",cantidad:1,precio:124900,costo:65788},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT URBAN ELIXIR EDP 105 ML",cantidad:1,precio:89900,costo:48730},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT WHITE IMPERIALE EDP 105 ML",cantidad:1,precio:94900,costo:50452},
+  {marca:"ARMAF",nombre:"CLUB DE NUIT UNTOLD EDP 105 ML",cantidad:0,precio:92000,costo:54907},
+  {marca:"ARMAF",nombre:"ODYSSEY HOMME EDP 100 ML",cantidad:1,precio:69000,costo:33701},
+  {marca:"ARMAF",nombre:"ODYSSEY MANDARIN SKY",cantidad:2,precio:69000,costo:37679},
+  {marca:"ARMAF",nombre:"ODYSSEY MEGA EDP 100ML",cantidad:3,precio:69000,costo:32867},
+  {marca:"LATTAFA",nombre:"AFEEF EDP 100ML",cantidad:0,precio:79000,costo:48028},
+  {marca:"LATTAFA",nombre:"AJAYEB DUBAI EDP 100ML",cantidad:0,precio:49900,costo:22264},
+  {marca:"LATTAFA",nombre:"AJAYEB DUBAI BRANCO UNISEX EDP 100ML",cantidad:1,precio:49900,costo:22264},
+  {marca:"LATTAFA",nombre:"AJWAD EDP 60ML",cantidad:3,precio:50900,costo:23283},
+  {marca:"LATTAFA",nombre:"ANA ABIYEDH EDP 60ML",cantidad:4,precio:44900,costo:16575},
+  {marca:"LATTAFA",nombre:"ANA ABIYEDH CORAL EDP 60ML",cantidad:1,precio:44900,costo:21551},
+  {marca:"LATTAFA",nombre:"ANA ABIYEDH ROUGE EDP 60ML",cantidad:3,precio:44900,costo:17332},
+  {marca:"LATTAFA",nombre:"ANGHAM 100ML",cantidad:2,precio:69000,costo:35393},
+  {marca:"LATTAFA",nombre:"ANGHAM SECOND SONG 100ML",cantidad:0,precio:75000,costo:41529},
+  {marca:"LATTAFA",nombre:"ASAD KIT BLACK + ZANZIBAR",cantidad:0,precio:95000,costo:49025},
+  {marca:"LATTAFA",nombre:"ASAD EDP 100ML",cantidad:1,precio:59000,costo:35417},
+  {marca:"LATTAFA",nombre:"ASAD BOURBON EDP 100ML",cantidad:1,precio:69000,costo:38417},
+  {marca:"LATTAFA",nombre:"ASAD ZANZIBAR EDP 100ML",cantidad:0,precio:59000,costo:25316},
+  {marca:"LATTAFA",nombre:"CONFIDENTIAL PRIVATE GOLD EDP 100ML",cantidad:4,precio:43900,costo:21890},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD SUBLIME 100ML",cantidad:3,precio:65000,costo:24107},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD AMETHYST EDP 100ML",cantidad:3,precio:65000,costo:30741},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD FOR GLORY EDP 100ML",cantidad:2,precio:65000,costo:28962},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD KIT FOR GLORY EDP 100ML + DESODORANTE",cantidad:1,precio:75000,costo:36875},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD HONOR & GLORY EDP 100ML",cantidad:2,precio:65000,costo:31054},
+  {marca:"LATTAFA",nombre:"BADE'E AL OUD NOBLE BLUSH EDP 100ML",cantidad:2,precio:65000,costo:29065},
+  {marca:"LATTAFA",nombre:"ECLAIRE EDP 100ML",cantidad:1,precio:79000,costo:33043},
+  {marca:"LATTAFA",nombre:"EJAAZI EDP 100ML",cantidad:2,precio:45900,costo:17113},
+  {marca:"LATTAFA",nombre:"EMAAN EDP 100ML",cantidad:1,precio:69000,costo:33043},
+  {marca:"LATTAFA",nombre:"FAKHAR GOLD EXTRAIT DE PARFUM 100ML",cantidad:1,precio:60000,costo:28334},
+  {marca:"LATTAFA",nombre:"FAKHAR MASCULINO EDP 100ML",cantidad:0,precio:60000,costo:34847},
+  {marca:"LATTAFA",nombre:"FAKHAR ROSE EDP 100ML",cantidad:0,precio:60000,costo:28488},
+  {marca:"LATTAFA",nombre:"HAYA EDP 100ML",cantidad:1,precio:65000,costo:40025},
+  {marca:"LATTAFA",nombre:"HAYAATI EDP 100ML",cantidad:1,precio:49900,costo:21234},
+  {marca:"LATTAFA",nombre:"HAYAATI AL MALEKY EDP 100ML",cantidad:2,precio:49900,costo:20780},
+  {marca:"LATTAFA",nombre:"HAYAATI FLORENCE EDP 100ML",cantidad:3,precio:49900,costo:22083},
+  {marca:"LATTAFA",nombre:"HER CONFESSION EDP 100ML",cantidad:1,precio:79990,costo:41915},
+  {marca:"LATTAFA",nombre:"HIS CONFESSION EDP 100 ML",cantidad:1,precio:79990,costo:41817},
+  {marca:"LATTAFA",nombre:"KHAMRAH DUKHAN EDP 100 ML",cantidad:0,precio:69000,costo:30741},
+  {marca:"LATTAFA",nombre:"KHAMRAH EDP 100ML",cantidad:2,precio:69000,costo:30741},
+  {marca:"LATTAFA",nombre:"KHAMRAH QAHWA EDP 100ML",cantidad:2,precio:69000,costo:27389},
+  {marca:"LATTAFA",nombre:"KHANJAR EDP 85 ML",cantidad:1,precio:130000,costo:66061},
+  {marca:"LATTAFA",nombre:"LAIL MALEKI 100ML",cantidad:1,precio:48900,costo:21030},
+  {marca:"LATTAFA",nombre:"LAIL MALEKI MOROCCON BLUE EDP 100ML",cantidad:0,precio:48900,costo:21030},
+  {marca:"LATTAFA",nombre:"MAYAR CHERRY INTENSE EDP 100ML",cantidad:1,precio:60500,costo:33870},
+  {marca:"LATTAFA",nombre:"MAYAR NATURAL INTENSE 100ML",cantidad:1,precio:55000,costo:27868},
+  {marca:"LATTAFA",nombre:"MAYAR EDP 100ML",cantidad:0,precio:55000,costo:38870},
+  {marca:"LATTAFA",nombre:"MOHRA SILKY ROSE 100ML",cantidad:0,precio:48900,costo:19602},
+  {marca:"LATTAFA",nombre:"NEBRAS EDP 100ML",cantidad:0,precio:65000,costo:39516},
+  {marca:"LATTAFA",nombre:"NEBRAS ELIXIR - EDP 100ML",cantidad:1,precio:109000,costo:36948},
+  {marca:"LATTAFA",nombre:"NICHE EMARATI ANTIQUE EDP 100ML",cantidad:2,precio:98900,costo:50452},
+  {marca:"LATTAFA",nombre:"QAED AL FURSAN 90ML",cantidad:2,precio:46000,costo:23897},
+  {marca:"LATTAFA",nombre:"QAED AL FURSAN UNLIMITED 90ML",cantidad:1,precio:39900,costo:18813},
+  {marca:"LATTAFA",nombre:"QAED AL FURSAN UNTAMED 90ML",cantidad:1,precio:42000,costo:19816},
+  {marca:"LATTAFA",nombre:"QIMMAH FOR MEN (BLACK) 100ML",cantidad:1,precio:55000,costo:23926},
+  {marca:"LATTAFA",nombre:"SAKEENA EDP 100ML",cantidad:1,precio:59000,costo:23946},
+  {marca:"LATTAFA",nombre:"TERIAQ 100ML",cantidad:1,precio:69000,costo:37454},
+  {marca:"LATTAFA",nombre:"TERIAQ INTENSE 100ML",cantidad:1,precio:69000,costo:37744},
+  {marca:"LATTAFA",nombre:"THE KINGDOM FEMM EDP 100ML",cantidad:1,precio:69000,costo:30516},
+  {marca:"LATTAFA",nombre:"THE KINGDOM MEN EDP 100ML",cantidad:1,precio:78900,costo:39550},
+  {marca:"LATTAFA",nombre:"VICTORIA EDP 100ML",cantidad:1,precio:69000,costo:37207},
+  {marca:"LATTAFA",nombre:"YARA EDP 100ML",cantidad:2,precio:55900,costo:31054},
+  {marca:"LATTAFA",nombre:"YARA CANDY EDP 100ML",cantidad:2,precio:55900,costo:30147},
+  {marca:"LATTAFA",nombre:"YARA ELIXIR - EDP 100ML",cantidad:1,precio:79000,costo:42745},
+  {marca:"LATTAFA",nombre:"YARA KIT ROSA + CANDY",cantidad:0,precio:95000,costo:58725},
+  {marca:"LATTAFA",nombre:"YARA KIT MINI X 4 25ML",cantidad:1,precio:85000,costo:46274},
+  {marca:"LATTAFA",nombre:"YARA KIT OIL MINI X 4 5ML",cantidad:1,precio:65000,costo:31961},
+  {marca:"LATTAFA",nombre:"YARA MOI EDP 100 ML",cantidad:0,precio:55900,costo:31054},
+  {marca:"LATTAFA",nombre:"YARA TOUS EDP 100ML",cantidad:1,precio:55900,costo:26116},
+  {marca:"LATTAFA PRIDE",nombre:"ART OF UNIVERSE - EDP 100 ML",cantidad:1,precio:75000,costo:43845},
+  {marca:"TUBBEES",nombre:"COOKIES & CREAM 50ML",cantidad:0,precio:39999,costo:17145},
+  {marca:"TUBBEES",nombre:"COTTON CANDY 50ML",cantidad:3,precio:39999,costo:17145},
+  {marca:"TUBBEES",nombre:"DREAMY TREATS 50ML",cantidad:2,precio:39999,costo:17145},
+  {marca:"TUBBEES",nombre:"STRAWBERRY CHEESECAKE 50ML",cantidad:4,precio:39999,costo:17145},
+  {marca:"Xerjoff",nombre:"ERBA PURA EDP 100ML",cantidad:1,precio:350000,costo:325867},
+  {marca:"BHARARA",nombre:"KING 100 ML + PERFUMERO",cantidad:0,precio:115000,costo:66299},
+  {marca:"BHARARA",nombre:"NICHE 100 ML",cantidad:1,precio:115000,costo:65316},
+  {marca:"LATTAFA",nombre:"BODY SPLASH HAYA 250ML",cantidad:1,precio:30000,costo:19169},
+  {marca:"LATTAFA",nombre:"BODY SPLASH NOBLE BLUSH 250ML",cantidad:1,precio:30000,costo:19169},
+  {marca:"LATTAFA",nombre:"PRIDE SHAHEEN SILVER EDP 100ML",cantidad:2,precio:69900,costo:31818},
+  {marca:"LATTAFA",nombre:"PRIDE SHAHEEN GOLD EDP 100ML",cantidad:2,precio:60900,costo:33203},
+  {marca:"LATTAFA",nombre:"Ansaam Gold EDP 100ML",cantidad:1,precio:65000,costo:36041},
+  {marca:"LATTAFA",nombre:"Ansaam silver EDP 100ML",cantidad:2,precio:65000,costo:31054},
+  {marca:"LATTAFA",nombre:"KIT NEBRAS 3PC",cantidad:1,precio:95000,costo:54629},
+  {marca:"LATTAFA",nombre:"KIT ANSAAM GOLD 3 PC",cantidad:1,precio:95000,costo:54629},
+];
+
+let sales = [];
+let catalog = CATALOG.map(p=>({...p}));
+
+// ── GOOGLE SHEETS CONFIG ──
+const GS_ID  = '1rXBKWWZnvTkUSodJCBbIWLxtHtZXKdV-pA1DPLQI_m8';
+const GS_KEY = 'AIzaSyA5_i5E91EDpNiJiwJ2uWEMHc7F0h2Pbhk';
+const GS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
+
+function showSyncStatus(msg, color){
+  let el = document.getElementById('sync-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.color = color || 'var(--text3)';
+  el.style.opacity = '1';
+  if(msg && color !== 'var(--red)') setTimeout(()=>{ el.style.opacity='0'; }, 3000);
+}
+
+// ── SHEETS HELPERS ──
+async function sheetsGet(range){
+  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+'?key='+GS_KEY;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('Sheets GET error '+r.status);
+  return (await r.json()).values || [];
+}
+
+async function sheetsWrite(range, values){
+  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+'?valueInputOption=RAW&key='+GS_KEY;
+  const r = await fetch(url, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({range, majorDimension:'ROWS', values})
+  });
+  if(!r.ok){
+    const err = await r.json().catch(()=>({}));
+    // If sheet doesn't exist yet, try to create it first
+    if(err.error && err.error.message && err.error.message.includes('Unable to parse range')){
+      throw new Error('SHEET_NOT_FOUND:'+range.split('!')[0]);
+    }
+    throw new Error('Sheets PUT error '+r.status+' '+JSON.stringify(err));
+  }
+  return r.json();
+}
+
+async function sheetsAppend(range, values){
+  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+':append?valueInputOption=RAW&insertDataOption=INSERT_ROWS&key='+GS_KEY;
+  const r = await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({range, majorDimension:'ROWS', values})
+  });
+  if(!r.ok) throw new Error('Sheets APPEND error '+r.status);
+  return r.json();
+}
+
+async function ensureSheets(){
+  // Get existing sheet names
+  const url = GS_BASE+'/'+GS_ID+'?fields=sheets.properties.title&key='+GS_KEY;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('Cannot access spreadsheet. Check that it is shared as public reader.');
+  const data = await r.json();
+  const existing = (data.sheets||[]).map(s=>s.properties.title);
+  const needed = ['catalog','sales'];
+  const toCreate = needed.filter(n=>!existing.includes(n));
+  if(toCreate.length === 0) return;
+  // Batch add missing sheets via batchUpdate — needs OAuth, so instead we'll use the first sheet
+  // Rename Sheet1 to catalog if needed
+  console.log('Sheets needed:', toCreate);
+}
+
+// ── SAVE / LOAD ──
+async function saveCatalog(){
+  showSyncStatus('Guardando...', 'var(--gold)');
+  try{
+    const rows = [['marca','nombre','cantidad','precio','costo']];
+    catalog.forEach(p => rows.push([p.marca, p.nombre, p.cantidad, p.precio, p.costo||0]));
+    // Clear then write
+    await sheetsWrite('catalog!A1:E'+(rows.length+10), rows.concat(Array(10).fill(['','','','',''])));
+    showSyncStatus('✓ Guardado', 'var(--green)');
+  } catch(e){
+    console.error('saveCatalog error:', e);
+    showSyncStatus('Sin conexión — datos en memoria', 'var(--text3)');
+  }
+}
+
+async function saveSales(){
+  // Sales are append-only — we rewrite the full list to keep it clean
+  showSyncStatus('Guardando venta...', 'var(--gold)');
+  try{
+    const rows = [['id','fecha','producto','marca','cantidad','precio_unit','precio_lista','total','costo_unit','ganancia','descuento','metodo','cliente']];
+    sales.forEach(s => rows.push([s.id,s.fecha,s.producto,s.marca,s.cantidad,s.precio_unit,s.precio_lista,s.total,s.costo_unit||0,s.ganancia||0,s.descuento?1:0,s.metodo,s.cliente||'']));
+    await sheetsWrite('sales!A1:M'+(rows.length+10), rows.concat(Array(10).fill(Array(13).fill(''))));
+    showSyncStatus('✓ Guardado', 'var(--green)');
+  } catch(e){
+    console.error('saveSales error:', e);
+    showSyncStatus('Sin conexión — datos en memoria', 'var(--text3)');
+  }
+}
+
+async function loadFromStorage(){
+  showSyncStatus('Conectando con Google Sheets...', 'var(--gold)');
+  try{
+    await ensureSheets();
+    // Load catalog
+    const catRows = await sheetsGet('catalog!A2:E');
+    if(catRows.length > 0){
+      catalog = catRows
+        .filter(r => r[0] && r[1])
+        .map(r => ({
+          marca:    r[0]||'',
+          nombre:   r[1]||'',
+          cantidad: +r[2]||0,
+          precio:   +r[3]||0,
+          costo:    +r[4]||0
+        }));
+    } else {
+      // First time — write initial catalog
+      await saveCatalog();
+    }
+    // Load sales
+    const saleRows = await sheetsGet('sales!A2:M');
+    if(saleRows.length > 0){
+      sales = saleRows
+        .filter(r => r[0])
+        .map(r => ({
+          id:          +r[0]||0,
+          fecha:       r[1]||'',
+          producto:    r[2]||'',
+          marca:       r[3]||'',
+          cantidad:    +r[4]||0,
+          precio_unit: +r[5]||0,
+          precio_lista:+r[6]||0,
+          total:       +r[7]||0,
+          costo_unit:  +r[8]||0,
+          ganancia:    +r[9]||0,
+          descuento:   r[10]==='1'||r[10]===1||r[10]===true,
+          metodo:      r[11]||'',
+          cliente:     r[12]||''
+        }));
+    }
+    showSyncStatus('✓ Sincronizado con Google Sheets', 'var(--green)');
+  } catch(e){
+    console.error('loadFromStorage error:', e);
+    showSyncStatus('⚠ Sin conexión — modo offline', 'var(--red)');
+  }
+  renderStock();
+  renderHist();
+}
+
+// ═══════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════
+function nav(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  document.getElementById('nb-'+id).classList.add('on');
+  if(id==='stock') renderStock();
+  if(id==='hist') renderHist();
+  if(id==='cat') renderCat();
+  if(id==='compra') initCompra();
+}
+
+const ars = n => '$'+Math.round(n).toLocaleString('es-AR');
+const pct = n => Math.round(n)+'%';
+const brands = () => [...new Set(catalog.map(p=>p.marca))].sort();
+
+// ═══════════════════════════════════════════════
+// STOCK
+// ═══════════════════════════════════════════════
+let sBrand='all';
+function renderStock(){
+  const q = document.getElementById('s-search').value.toLowerCase();
+  const disc = +document.getElementById('s-disc').value;
+  document.getElementById('s-disc-v').textContent = disc+'%';
+  document.getElementById('s-disc-hdr').textContent = 'c/'+disc+'%';
+
+  // Brand chips
+  const bc = document.getElementById('s-brands');
+  bc.innerHTML = `<span class="chip ${sBrand==='all'?'on':''}" onclick="sBrand='all';renderStock()">Todas</span>`
+    + brands().map(b=>`<span class="chip ${sBrand===b?'on':''}" onclick="sBrand='${b}';renderStock()">${b}</span>`).join('');
+
+  const filtered = catalog.filter(p=>{
+    if(sBrand!=='all' && p.marca!==sBrand) return false;
+    if(q && !p.nombre.toLowerCase().includes(q) && !p.marca.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const tbody = document.getElementById('s-body');
+  tbody.innerHTML = filtered.map(p=>{
+    const alert = p.cantidad<=1;
+    const margen = p.costo ? Math.round((p.precio-p.costo)/p.costo*100) : null;
+    const p15 = Math.round(p.precio*0.85);
+    const pDisc = Math.round(p.precio*(1-disc/100));
+    const m15 = p.costo ? Math.round((p15-p.costo)/p.costo*100) : null;
+    const mDisc = p.costo ? Math.round((pDisc-p.costo)/p.costo*100) : null;
+    const mColor = (m) => m===null?'#ccc': m>50?'#2e7d32': m>20?'#b45309':'#c0392b';
+    const mWidth = (m) => m===null?0: Math.min(100,Math.max(0,m))/100*100;
+    const badge = p.cantidad===0 ? '<span class="badge b-lo">Sin stock</span>'
+                : p.cantidad===1 ? '<span class="badge b-lo">⚠ 1 ud</span>'
+                : '<span class="badge b-ok">'+p.cantidad+'</span>';
+    return `<tr class="${alert?'alerta':''}">
+      <td><span style="font-size:10px;color:var(--text3);">${p.marca}</span><br><strong style="font-size:11px;">${p.nombre}</strong></td>
+      <td>${badge}</td>
+      <td style="white-space:nowrap;">${ars(p.precio)}</td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--text2);">${p.costo?ars(p.costo):'-'}</td>
+      <td>${margen!==null?`<div class="mbar"><div class="mfill" style="width:${mWidth(margen)}%;background:${mColor(margen)};"></div></div><span style="font-size:10px;margin-left:3px;">${pct(margen)}</span>`:'—'}</td>
+      <td style="font-size:11px;white-space:nowrap;">${p.costo?`${ars(p15)}<br><span style="color:${mColor(m15)};font-size:10px;">${m15!==null?pct(m15):''}</span>`:'-'}</td>
+      <td style="font-size:11px;white-space:nowrap;">${disc>0&&p.costo?`${ars(pDisc)}<br><span style="color:${mColor(mDisc)};font-size:10px;">${mDisc!==null?pct(mDisc):''}</span>`:'-'}</td>
+    </tr>`;
+  }).join('');
+}
+loadFromStorage();
+
+// ═══════════════════════════════════════════════
+// VENTA WIZARD
+// ═══════════════════════════════════════════════
+let vState = {prod:null, qty:1, pay:null, cashDisc:false, step:1};
+
+function ventaSearch(q){
+  const box = document.getElementById('v-results');
+  if(!q){box.style.display='none';return;}
+  const r = catalog.filter(p=>p.cantidad>0 && (p.nombre.toLowerCase().includes(q.toLowerCase())||p.marca.toLowerCase().includes(q.toLowerCase()))).slice(0,8);
+  if(!r.length){box.style.display='none';return;}
+  box.style.display='block';
+  box.innerHTML = r.map((p,i)=>`<div class="res-item" onclick="selectProd(${catalog.indexOf(p)})">
+    <div class="res-name">${p.nombre}</div>
+    <div class="res-meta">${p.marca} · ${ars(p.precio)} · Stock: ${p.cantidad}</div>
+  </div>`).join('');
+}
+
+function selectProd(idx){
+  vState.prod = idx;
+  const p = catalog[idx];
+  document.getElementById('v-results').style.display='none';
+  document.getElementById('v-search').value=p.nombre;
+  document.getElementById('v-sel').style.display='block';
+  document.getElementById('v-sel').innerHTML=`<div class="card2" style="margin-top:8px;">
+    <strong style="font-size:13px;">${p.nombre}</strong>
+    <div style="font-size:12px;color:var(--text2);margin-top:4px;">${p.marca} · ${ars(p.precio)} · Stock disponible: ${p.cantidad}</div>
+  </div>`;
+  goStep(2);
+}
+
+function goStep(n){
+  vState.step=n;
+  document.querySelectorAll('.ws').forEach(w=>w.classList.remove('on'));
+  document.getElementById('ws'+n).classList.add('on');
+  [1,2,3,4].forEach(i=>{
+    const d=document.getElementById('sd'+i);
+    d.classList.remove('cur','done');
+    if(i<n) d.classList.add('done');
+    else if(i===n) d.classList.add('cur');
+  });
+  if(n===2) renderQtyStep();
+  if(n===3) renderPayStep();
+  if(n===4) renderSummary();
+}
+
+function renderQtyStep(){
+  const p = catalog[vState.prod];
+  document.getElementById('ws2-name').textContent = p.nombre;
+  document.getElementById('v-qty').textContent = vState.qty;
+  const cashWrap = document.getElementById('cash-wrap');
+  if(vState.pay==='efectivo'||vState.pay===null){
+    cashWrap.style.display='flex';
+  } else {
+    cashWrap.style.display='none';
+    vState.cashDisc=false;
+  }
+  renderPricePreview();
+}
+
+function chgQty(d){
+  const p = catalog[vState.prod];
+  vState.qty = Math.max(1, Math.min(p.cantidad, vState.qty+d));
+  document.getElementById('v-qty').textContent = vState.qty;
+  renderPricePreview();
+}
+
+function togCash(){
+  const tog = document.getElementById('v-cash-tog');
+  vState.cashDisc = !vState.cashDisc;
+  tog.classList.toggle('on', vState.cashDisc);
+  renderPricePreview();
+}
+
+function togCash2(){
+  const tog = document.getElementById('v-cash-tog2');
+  vState.cashDisc = !vState.cashDisc;
+  tog.classList.toggle('on', vState.cashDisc);
+  renderSummary();
+}
+
+function renderPricePreview(){
+  const p = catalog[vState.prod];
+  const precio = vState.cashDisc ? Math.round(p.precio*0.85) : p.precio;
+  const total = precio * vState.qty;
+  const margen = p.costo ? Math.round((precio-p.costo)/p.costo*100) : null;
+  document.getElementById('v-price-prev').innerHTML=`
+    <div style="display:flex;justify-content:space-between;font-size:13px;">
+      <span>Precio unitario</span><span>${ars(p.precio)}</span>
+    </div>
+    ${vState.cashDisc?`<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gold);margin-top:4px;"><span>− 15% efectivo</span><span>−${ars(p.precio*0.15)}</span></div>`:''}
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px;">
+      <span>Cantidad</span><span>× ${vState.qty}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:600;border-top:1px solid var(--border);margin-top:8px;padding-top:8px;">
+      <span>Total</span><span style="color:var(--gold);">${ars(total)}</span>
+    </div>
+    ${margen!==null?`<div style="font-size:11px;color:var(--text2);margin-top:4px;">Margen: ${pct(margen)}</div>`:''}
+  `;
+}
+
+function selPay(method){
+  vState.pay = method;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pay-'+method).classList.add('on');
+  const cd = document.getElementById('cash-disc-auto');
+  if(method==='efectivo'){
+    cd.style.display='block';
+    vState.cashDisc=true;
+    document.getElementById('v-cash-tog2').classList.add('on');
+  } else {
+    cd.style.display='none';
+    vState.cashDisc=false;
+  }
+}
+
+function renderPayStep(){
+  const cd = document.getElementById('cash-disc-auto');
+  if(vState.pay==='efectivo'){
+    cd.style.display='block';
+  } else {
+    cd.style.display='none';
+  }
+}
+
+function renderSummary(){
+  const p = catalog[vState.prod];
+  const precio = vState.cashDisc ? Math.round(p.precio*0.85) : p.precio;
+  const total = precio * vState.qty;
+  const ganancia = p.costo ? (precio - p.costo) * vState.qty : null;
+  const client = document.getElementById('v-client').value;
+  document.getElementById('v-summary').innerHTML=`
+    <div style="font-weight:600;font-size:14px;margin-bottom:10px;">${p.nombre}</div>
+    <div class="sum-row"><span>Marca</span><span>${p.marca}</span></div>
+    <div class="sum-row"><span>Precio lista</span><span>${ars(p.precio)}</span></div>
+    ${vState.cashDisc?`<div class="sum-row" style="color:var(--gold);"><span>Descuento 15%</span><span>−${ars(p.precio*0.15)}</span></div>`:''}
+    <div class="sum-row"><span>Precio unitario</span><span>${ars(precio)}</span></div>
+    <div class="sum-row"><span>Cantidad</span><span>${vState.qty}</span></div>
+    <div class="sum-row"><span>Método de pago</span><span style="text-transform:capitalize;">${vState.pay||'—'}</span></div>
+    ${client?`<div class="sum-row"><span>Cliente</span><span>${client}</span></div>`:''}
+    <div class="sum-row ttl-row"><span>Total</span><span style="color:var(--gold);">${ars(total)}</span></div>
+    ${ganancia!==null?`<div style="font-size:11px;color:var(--text2);margin-top:6px;">Ganancia estimada: ${ars(ganancia)}</div>`:''}
+  `;
+}
+
+async function confirmSale(){
+  if(!vState.prod===null||!vState.pay) return;
+  const p = catalog[vState.prod];
+  const precio = vState.cashDisc ? Math.round(p.precio*0.85) : p.precio;
+  const total = precio * vState.qty;
+  const client = document.getElementById('v-client').value;
+  const sale = {
+    id: Date.now(),
+    fecha: new Date().toISOString(),
+    producto: p.nombre,
+    marca: p.marca,
+    cantidad: vState.qty,
+    precio_unit: precio,
+    precio_lista: p.precio,
+    total,
+    costo_unit: p.costo||0,
+    ganancia: p.costo?(precio-p.costo)*vState.qty:0,
+    descuento: vState.cashDisc,
+    metodo: vState.pay,
+    cliente: client||''
+  };
+  sales.unshift(sale);
+  await saveSales();
+  // Update stock
+  catalog[vState.prod].cantidad -= vState.qty;
+  await saveCatalog();
+  document.getElementById('ok-detail').textContent = `${p.nombre} · ${vState.qty} ud · ${ars(total)}`;
+  goStep(5);
+}
+
+function newSale(){
+  vState={prod:null,qty:1,pay:null,cashDisc:false,step:1};
+  document.getElementById('v-search').value='';
+  document.getElementById('v-sel').style.display='none';
+  document.getElementById('v-client').value='';
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
+  goStep(1);
+}
+
+// ═══════════════════════════════════════════════
+// HISTORIAL
+// ═══════════════════════════════════════════════
+let hFilt='all';
+function filtHist(f,el){
+  hFilt=f;
+  document.querySelectorAll('#h-chips .chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderHist();
+}
+
+function renderHist(){
+  const cf = document.getElementById('h-client-f').value.toLowerCase();
+  let filtered = sales.filter(s=>{
+    if(hFilt!=='all' && s.metodo!==hFilt) return false;
+    if(cf && !s.cliente.toLowerCase().includes(cf) && !s.producto.toLowerCase().includes(cf)) return false;
+    return true;
+  });
+
+  // Metrics
+  const total = filtered.reduce((a,s)=>a+s.total,0);
+  const ganancia = filtered.reduce((a,s)=>a+(s.ganancia||0),0);
+  const unidades = filtered.reduce((a,s)=>a+s.cantidad,0);
+  const ticket = filtered.length ? Math.round(total/filtered.length) : 0;
+  document.getElementById('h-metrics').innerHTML=`
+    <div class="met"><div class="met-lbl">Total vendido</div><div class="met-val gold">${ars(total)}</div></div>
+    <div class="met"><div class="met-lbl">Ganancia</div><div class="met-val gold">${ars(ganancia)}</div></div>
+    <div class="met"><div class="met-lbl">Unidades</div><div class="met-val">${unidades}</div></div>
+    <div class="met"><div class="met-lbl">Ticket prom.</div><div class="met-val">${ars(ticket)}</div></div>
+  `;
+
+  // Sales list
+  const list = document.getElementById('h-list');
+  if(!filtered.length){
+    list.innerHTML='<div class="no-data">Sin ventas registradas</div>';
+  } else {
+    list.innerHTML = filtered.map(s=>{
+      const d = new Date(s.fecha);
+      const fecha = d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+      return `<div class="sale-card">
+        <div class="sale-top">
+          <div class="sale-prod">${s.producto}</div>
+          <div class="sale-price">${ars(s.total)}</div>
+        </div>
+        <div class="sale-meta">${fecha} · ${s.cantidad} ud · ${s.metodo}${s.descuento?' · 15% OFF':''}${s.cliente?' · '+s.cliente:''}</div>
+        ${s.ganancia?`<div style="font-size:11px;color:var(--text3);margin-top:2px;">Ganancia: ${ars(s.ganancia)}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  // Top 5
+  const prod_map={};
+  filtered.forEach(s=>{
+    if(!prod_map[s.producto]) prod_map[s.producto]={qty:0,total:0};
+    prod_map[s.producto].qty+=s.cantidad;
+    prod_map[s.producto].total+=s.total;
+  });
+  const top5 = Object.entries(prod_map).sort((a,b)=>b[1].total-a[1].total).slice(0,5);
+  const t5el = document.getElementById('h-top5');
+  if(!top5.length){
+    t5el.innerHTML='<div class="no-data" style="padding:20px;">Sin datos</div>';
+  } else {
+    t5el.innerHTML = top5.map(([nom,d],i)=>`
+      <div class="top5-item">
+        <span class="t5-rank">${i+1}</span>
+        <div style="flex:1;"><div class="t5-name">${nom}</div><div style="font-size:10px;color:var(--text3);">${d.qty} unidades</div></div>
+        <span class="t5-val">${ars(d.total)}</span>
+      </div>`).join('');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CATÁLOGO
+// ═══════════════════════════════════════════════
+let cBrand='all';
+function renderCat(){
+  const q = document.getElementById('c-search').value.toLowerCase();
+  const bc = document.getElementById('c-brands');
+  bc.innerHTML = `<span class="chip ${cBrand==='all'?'on':''}" onclick="cBrand='all';renderCat()">Todas</span>`
+    + brands().map(b=>`<span class="chip ${cBrand===b?'on':''}" onclick="cBrand='${b}';renderCat()">${b}</span>`).join('');
+
+  const filtered = catalog.filter(p=>{
+    if(cBrand!=='all' && p.marca!==cBrand) return false;
+    if(q && !p.nombre.toLowerCase().includes(q) && !p.marca.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  document.getElementById('c-grid').innerHTML = filtered.map(p=>{
+    const margen = p.costo ? Math.round((p.precio-p.costo)/p.costo*100) : null;
+    const stockTxt = p.cantidad===0?'Sin stock': p.cantidad===1?'⚠ Último': p.cantidad+' en stock';
+    const stockColor = p.cantidad<=1?'var(--red)':'var(--text3)';
+    return `<div class="cat-card">
+      <div class="cat-brand">${p.marca}</div>
+      <div class="cat-name">${p.nombre}</div>
+      <div class="cat-price">${ars(p.precio)}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:3px;">Costo: ${ars(p.costo)}</div>
+      ${margen!==null?`<div style="font-size:10px;color:var(--text3);margin-top:2px;">Margen: ${pct(margen)}</div>`:''}
+      <div style="font-size:10px;color:${stockColor};margin-top:4px;">${stockTxt}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// COMPRA
+// ═══════════════════════════════════════════════
+let notaItems=[];
+
+function initCompra(){
+  if(!notaItems.length) notaItems=[];
+  renderNotaItems();
+}
+
+function addNotaItem(){
+  notaItems.push({nombre:'',cantidad:1,usd:0,matchIdx:-1,matchScore:'no'});
+  renderNotaItems();
+}
+
+function removeNotaItem(i){
+  notaItems.splice(i,1);
+  renderNotaItems();
+  recalcNota();
+}
+
+// ── IMAGE DROP ──
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('drop-zone').style.borderColor='var(--border2)';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) handleFile(file);
+}
+
+function handleFile(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const b64 = e.target.result.split(',')[1];
+    const mime = file.type;
+    showDropPreview(e.target.result);
+    scanNotaImage(b64, mime);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showDropPreview(src){
+  document.getElementById('drop-content').style.display='none';
+  document.getElementById('drop-preview').style.display='block';
+  document.getElementById('drop-img').src=src;
+  setDropStatus('⏳ Leyendo nota con Claude...', '#b45309');
+}
+
+function setDropStatus(msg, color){
+  const el = document.getElementById('drop-status');
+  el.textContent=msg;
+  el.style.color=color||'var(--text2)';
+}
+
+async function scanNotaImage(b64, mime){
+  const catalogNames = catalog.map(p=>`${p.marca} ${p.nombre}`).join('\n');
+  const prompt = `Esta es una foto de una nota de venta de un proveedor de perfumes árabes. Es una pantalla de sistema de tipo terminal (fondo oscuro, texto en colores).
+
+Tu tarea: extraer la tabla de productos de la nota.
+
+De cada fila de producto extraé:
+- nombre: el nombre del producto TAL COMO aparece en la nota (columna "NOMBRE DEL PRODUTO" o similar)
+- cantidad: el número en la columna "CANTI." o "CANTIDAD"
+- precio_usd: el número en la columna "PRECO VENT" o "PRECIO UNIT" (puede tener asterisco *, ignoralo)
+
+Ignorá filas de encabezado, totales, y datos del cliente o tienda.
+
+Respondé SOLO con JSON válido, sin texto adicional, sin markdown, sin backticks:
+{"productos":[{"nombre":"...","cantidad":N,"precio_usd":N.NN},...]}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'image', source:{type:'base64', media_type:mime, data:b64}},
+            {type:'text', text:prompt}
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(c=>c.text||'').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    if(!parsed.productos||!parsed.productos.length) throw new Error('Sin productos');
+
+    // Poblar notaItems con fuzzy match
+    notaItems = parsed.productos.map(p=>{
+      const m = fuzzyMatch(p.nombre);
+      return {nombre:p.nombre, cantidad:p.cantidad, usd:p.precio_usd, matchIdx:m.idx, matchScore:m.score};
+    });
+
+    setDropStatus(`✓ ${notaItems.length} productos detectados`, 'var(--green)');
+    renderNotaItems();
+  } catch(err){
+    setDropStatus('✗ No se pudo leer la nota. Revisá la imagen o cargá manual.', 'var(--red)');
+    console.error(err);
+  }
+}
+
+function resetDrop(){
+  document.getElementById('drop-content').style.display='block';
+  document.getElementById('drop-preview').style.display='none';
+  document.getElementById('drop-img').src='';
+  document.getElementById('img-input').value='';
+}
+
+// ── FUZZY MATCH ──
+function fuzzyMatch(q){
+  const qu = q.toUpperCase().replace(/[^A-Z0-9 ]/g,'');
+  let best=-1, bestScore=0;
+  catalog.forEach((p,i)=>{
+    const pn = p.nombre.toUpperCase().replace(/[^A-Z0-9 ]/g,'');
+    const pm = p.marca.toUpperCase();
+    const combined = pm+' '+pn;
+    const words = qu.split(' ').filter(w=>w.length>2);
+    const matches = words.filter(w=>combined.includes(w)).length;
+    const score = words.length>0 ? matches/words.length : 0;
+    if(score>bestScore){bestScore=score;best=i;}
+  });
+  if(bestScore>=0.7) return {idx:best,score:'hi'};
+  if(bestScore>=0.4) return {idx:best,score:'md'};
+  return {idx:-1,score:'no'};
+}
+
+function matchBadgeHTML(it, i){
+  if(it.forceNew){
+    return '<span class="match-badge m-no">★ Producto nuevo</span>'
+          +' <button onclick="unforceNew('+i+')" style="background:none;border:none;font-size:10px;color:var(--text3);cursor:pointer;padding:0 2px;text-decoration:underline;">buscar match</button>';
+  }
+  const matchLabel = it.matchIdx>=0 ? catalog[it.matchIdx].nombre : '';
+  const matchClass = it.matchScore==='hi'?'m-hi': it.matchScore==='md'?'m-md':'m-no';
+  const matchText  = it.matchScore==='hi'?'✓ Alta': it.matchScore==='md'?'~ Media':'✗ Sin match';
+  if(it.matchIdx>=0)
+    return '<div class="match-name" style="font-size:11px;color:var(--text2);margin-top:2px;">→ '+matchLabel+'</div>'
+          +'<span class="match-badge '+matchClass+'">'+matchText+'</span>'
+          +' <button onclick="forceNew('+i+')" style="background:none;border:none;font-size:10px;color:var(--text3);cursor:pointer;text-decoration:underline;">es nuevo</button>';
+  return '<span class="match-badge m-no">'+matchText+'</span>'
+        +' <button onclick="forceNew('+i+')" style="background:none;border:none;font-size:10px;color:var(--gold);cursor:pointer;font-weight:600;">+ marcar como nuevo</button>';
+}
+
+function forceNew(i){
+  notaItems[i].forceNew = true;
+  notaItems[i].matchIdx = -1;
+  notaItems[i].matchScore = 'no';
+  const el = document.getElementById('ni-match-'+i);
+  if(el) el.innerHTML = matchBadgeHTML(notaItems[i], i);
+  recalcNota();
+}
+
+function unforceNew(i){
+  notaItems[i].forceNew = false;
+  autoMatch(i);
+}
+
+function renderNotaItems(){
+  const box = document.getElementById('n-items');
+  if(!notaItems.length){
+    box.innerHTML='<p style="font-size:12px;color:var(--text3);padding:12px 0;text-align:center;">Subí una imagen o agregá productos manualmente</p>';
+    recalcNota(); return;
+  }
+  box.innerHTML = notaItems.map((it,i)=>{
+    const safeNombre = it.nombre.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    return `<div class="nota-item" id="ni-${i}">
+      <div style="min-width:0;">
+        <input type="text" placeholder="Nombre en nota"
+          value="${safeNombre}"
+          oninput="notaItems[${i}].nombre=this.value"
+          onblur="if(!notaItems[${i}].forceNew) autoMatch(${i})"
+          style="margin-bottom:4px;">
+        <div id="ni-match-${i}">${matchBadgeHTML(it,i)}</div>
+      </div>
+      <input type="number" min="1" value="${it.cantidad}"
+        oninput="notaItems[${i}].cantidad=+this.value;recalcNota()">
+      <input type="number" min="0" step="0.01" value="${it.usd||''}" placeholder="USD"
+        oninput="notaItems[${i}].usd=+this.value;recalcNota()">
+      <button class="del-btn" onclick="removeNotaItem(${i})" aria-label="Eliminar">✕</button>
+    </div>`;
+  }).join('');
+  recalcNota();
+}
+
+function autoMatch(i){
+  if(notaItems[i].forceNew) return;
+  const m = fuzzyMatch(notaItems[i].nombre);
+  notaItems[i].matchIdx = m.idx;
+  notaItems[i].matchScore = m.score;
+  const el = document.getElementById('ni-match-'+i);
+  if(el) el.innerHTML = matchBadgeHTML(notaItems[i], i);
+  recalcNota();
+}
+
+function recalcNota(){
+  const usd = +document.getElementById('n-usd').value||0;
+  const env = +document.getElementById('n-env').value||0;
+  const totalUnits = notaItems.reduce((a,it)=>a+(+it.cantidad||0),0);
+  const envPorUnit = totalUnits>0 ? env/totalUnits : 0;
+  const sumBox = document.getElementById('n-summary');
+  const applyBtn = document.getElementById('n-apply-btn');
+  if(!usd||!notaItems.length){sumBox.style.display='none';applyBtn.style.display='none';return;}
+
+  let rows='', totalUSD=0;
+  notaItems.forEach(it=>{
+    if(!it.usd||!it.cantidad) return;
+    const costoUnit = Math.round(it.usd * usd * 1.17 + envPorUnit);
+    totalUSD += it.usd * it.cantidad;
+    const matchNom = it.matchIdx>=0 ? catalog[it.matchIdx].nombre : (it.nombre||'—');
+    const mClass = it.matchScore==='hi'?'m-hi': it.matchScore==='md'?'m-md':'m-no';
+    rows+=`<div class="nota-sum-row">
+      <span style="flex:1;">${matchNom} <span class="match-badge ${mClass}" style="font-size:9px;">×${it.cantidad}</span></span>
+      <span style="font-weight:600;">${ars(costoUnit)}</span>
+    </div>`;
+  });
+
+  const totalARS = Math.round(totalUSD*usd*1.17 + env);
+  sumBox.style.display='block';
+  sumBox.innerHTML=`<div class="nota-sum">
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;">Resumen de costos calculados</div>
+    ${rows}
+    <div class="nota-sum-row tot"><span>Total nota ARS</span><span>${ars(totalARS)}</span></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px;">USD ${totalUSD.toFixed(2)} × ${ars(usd)} × 1,17 + envío ${ars(env)}</div>
+  </div>`;
+  applyBtn.style.display='block';
+}
+
+async function applyNota(){
+  const usd = +document.getElementById('n-usd').value||0;
+  const env = +document.getElementById('n-env').value||0;
+  if(!usd){alert('Ingresá el tipo de cambio USD antes de aplicar.');return;}
+  const totalUnits = notaItems.reduce((a,it)=>a+(+it.cantidad||0),0);
+  const envPorUnit = totalUnits>0 ? env/totalUnits : 0;
+  let updated=0, added=0;
+
+  notaItems.forEach(it=>{
+    if(!it.usd||!it.cantidad) return;
+    const costoUnit = Math.round(it.usd * usd * 1.17 + envPorUnit);
+    if(it.matchIdx>=0){
+      catalog[it.matchIdx].costo = costoUnit;
+      catalog[it.matchIdx].cantidad += +it.cantidad;
+      updated++;
+    } else if(it.nombre){
+      catalog.push({marca:'NUEVO',nombre:it.nombre,cantidad:+it.cantidad,precio:0,costo:costoUnit});
+      added++;
+    }
+  });
+  await saveCatalog();
+  notaItems=[];
+  document.getElementById('n-usd').value='';
+  document.getElementById('n-env').value='';
+  document.getElementById('n-summary').style.display='none';
+  document.getElementById('n-apply-btn').style.display='none';
+  resetDrop();
+  renderNotaItems();
+  renderStock();
+  renderCat();
+  alert('✓ Aplicado: '+updated+' productos actualizados'+(added?', '+added+' nuevos':'')+'.');
+}
+</script>
+</html>
