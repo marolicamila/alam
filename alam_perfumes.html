@@ -505,13 +505,11 @@ const CATALOG = [
 let sales = [];
 let catalog = CATALOG.map(p=>({...p}));
 
-// ── GOOGLE SHEETS CONFIG ──
-const GS_ID  = '1rXBKWWZnvTkUSodJCBbIWLxtHtZXKdV-pA1DPLQI_m8';
-const GS_KEY = 'AIzaSyA5_i5E91EDpNiJiwJ2uWEMHc7F0h2Pbhk';
-const GS_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
+// ── GOOGLE APPS SCRIPT CONFIG ──
+const GAS_URL = 'https://script.google.com/macros/s/AKfycby6oiI8FvQye7cSalu79tJ7hQg7jFRahg9kiA_TRXosqMpkHz6GBtT6iacZ2yxgYG5Z/exec';
 
 function showSyncStatus(msg, color){
-  let el = document.getElementById('sync-status');
+  const el = document.getElementById('sync-status');
   if(!el) return;
   el.textContent = msg;
   el.style.color = color || 'var(--text3)';
@@ -519,56 +517,19 @@ function showSyncStatus(msg, color){
   if(msg && color !== 'var(--red)') setTimeout(()=>{ el.style.opacity='0'; }, 3000);
 }
 
-// ── SHEETS HELPERS ──
-async function sheetsGet(range){
-  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+'?key='+GS_KEY;
+// ── GAS HELPERS ──
+async function gasRead(sheet){
+  const url = GAS_URL+'?action=read&sheet='+encodeURIComponent(sheet);
   const r = await fetch(url);
-  if(!r.ok) throw new Error('Sheets GET error '+r.status);
-  return (await r.json()).values || [];
+  if(!r.ok) throw new Error('GAS read error '+r.status);
+  return await r.json();
 }
 
-async function sheetsWrite(range, values){
-  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+'?valueInputOption=RAW&key='+GS_KEY;
-  const r = await fetch(url, {
-    method:'PUT',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({range, majorDimension:'ROWS', values})
-  });
-  if(!r.ok){
-    const err = await r.json().catch(()=>({}));
-    // If sheet doesn't exist yet, try to create it first
-    if(err.error && err.error.message && err.error.message.includes('Unable to parse range')){
-      throw new Error('SHEET_NOT_FOUND:'+range.split('!')[0]);
-    }
-    throw new Error('Sheets PUT error '+r.status+' '+JSON.stringify(err));
-  }
-  return r.json();
-}
-
-async function sheetsAppend(range, values){
-  const url = GS_BASE+'/'+GS_ID+'/values/'+encodeURIComponent(range)+':append?valueInputOption=RAW&insertDataOption=INSERT_ROWS&key='+GS_KEY;
-  const r = await fetch(url, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({range, majorDimension:'ROWS', values})
-  });
-  if(!r.ok) throw new Error('Sheets APPEND error '+r.status);
-  return r.json();
-}
-
-async function ensureSheets(){
-  // Get existing sheet names
-  const url = GS_BASE+'/'+GS_ID+'?fields=sheets.properties.title&key='+GS_KEY;
+async function gasWrite(sheet, rows){
+  const url = GAS_URL+'?action=write&sheet='+encodeURIComponent(sheet)+'&data='+encodeURIComponent(JSON.stringify(rows));
   const r = await fetch(url);
-  if(!r.ok) throw new Error('Cannot access spreadsheet. Check that it is shared as public reader.');
-  const data = await r.json();
-  const existing = (data.sheets||[]).map(s=>s.properties.title);
-  const needed = ['catalog','sales'];
-  const toCreate = needed.filter(n=>!existing.includes(n));
-  if(toCreate.length === 0) return;
-  // Batch add missing sheets via batchUpdate — needs OAuth, so instead we'll use the first sheet
-  // Rename Sheet1 to catalog if needed
-  console.log('Sheets needed:', toCreate);
+  if(!r.ok) throw new Error('GAS write error '+r.status);
+  return await r.json();
 }
 
 // ── SAVE / LOAD ──
@@ -577,8 +538,7 @@ async function saveCatalog(){
   try{
     const rows = [['marca','nombre','cantidad','precio','costo']];
     catalog.forEach(p => rows.push([p.marca, p.nombre, p.cantidad, p.precio, p.costo||0]));
-    // Clear then write
-    await sheetsWrite('catalog!A1:E'+(rows.length+10), rows.concat(Array(10).fill(['','','','',''])));
+    await gasWrite('catalog', rows);
     showSyncStatus('✓ Guardado', 'var(--green)');
   } catch(e){
     console.error('saveCatalog error:', e);
@@ -587,12 +547,11 @@ async function saveCatalog(){
 }
 
 async function saveSales(){
-  // Sales are append-only — we rewrite the full list to keep it clean
   showSyncStatus('Guardando venta...', 'var(--gold)');
   try{
     const rows = [['id','fecha','producto','marca','cantidad','precio_unit','precio_lista','total','costo_unit','ganancia','descuento','metodo','cliente']];
     sales.forEach(s => rows.push([s.id,s.fecha,s.producto,s.marca,s.cantidad,s.precio_unit,s.precio_lista,s.total,s.costo_unit||0,s.ganancia||0,s.descuento?1:0,s.metodo,s.cliente||'']));
-    await sheetsWrite('sales!A1:M'+(rows.length+10), rows.concat(Array(10).fill(Array(13).fill(''))));
+    await gasWrite('sales', rows);
     showSyncStatus('✓ Guardado', 'var(--green)');
   } catch(e){
     console.error('saveSales error:', e);
@@ -603,45 +562,43 @@ async function saveSales(){
 async function loadFromStorage(){
   showSyncStatus('Conectando con Google Sheets...', 'var(--gold)');
   try{
-    await ensureSheets();
     // Load catalog
-    const catRows = await sheetsGet('catalog!A2:E');
-    if(catRows.length > 0){
-      catalog = catRows
+    const catRows = await gasRead('catalog');
+    if(catRows.length > 1){
+      catalog = catRows.slice(1)
         .filter(r => r[0] && r[1])
         .map(r => ({
-          marca:    r[0]||'',
-          nombre:   r[1]||'',
+          marca:    String(r[0]||''),
+          nombre:   String(r[1]||''),
           cantidad: +r[2]||0,
           precio:   +r[3]||0,
           costo:    +r[4]||0
         }));
     } else {
-      // First time — write initial catalog
       await saveCatalog();
     }
     // Load sales
-    const saleRows = await sheetsGet('sales!A2:M');
-    if(saleRows.length > 0){
-      sales = saleRows
+    const saleRows = await gasRead('sales');
+    if(saleRows.length > 1){
+      sales = saleRows.slice(1)
         .filter(r => r[0])
         .map(r => ({
-          id:          +r[0]||0,
-          fecha:       r[1]||'',
-          producto:    r[2]||'',
-          marca:       r[3]||'',
-          cantidad:    +r[4]||0,
-          precio_unit: +r[5]||0,
-          precio_lista:+r[6]||0,
-          total:       +r[7]||0,
-          costo_unit:  +r[8]||0,
-          ganancia:    +r[9]||0,
-          descuento:   r[10]==='1'||r[10]===1||r[10]===true,
-          metodo:      r[11]||'',
-          cliente:     r[12]||''
+          id:           +r[0]||0,
+          fecha:        String(r[1]||''),
+          producto:     String(r[2]||''),
+          marca:        String(r[3]||''),
+          cantidad:     +r[4]||0,
+          precio_unit:  +r[5]||0,
+          precio_lista: +r[6]||0,
+          total:        +r[7]||0,
+          costo_unit:   +r[8]||0,
+          ganancia:     +r[9]||0,
+          descuento:    r[10]==='1'||r[10]===1||r[10]===true,
+          metodo:       String(r[11]||''),
+          cliente:      String(r[12]||'')
         }));
     }
-    showSyncStatus('✓ Sincronizado con Google Sheets', 'var(--green)');
+    showSyncStatus('✓ Sincronizado', 'var(--green)');
   } catch(e){
     console.error('loadFromStorage error:', e);
     showSyncStatus('⚠ Sin conexión — modo offline', 'var(--red)');
